@@ -17,7 +17,7 @@ namespace Discount.Grpc.Repositories
         {
             using var connection = new NpgsqlConnection(_connectionString);
             var createResult = await connection.ExecuteAsync
-                ("insert into coupon(productid, description, amount) values(@ProductId, @Description, @Amount)", new { ProductId=coupon.ProductId, Description=coupon.Description, Amount=coupon.Amount });
+                ("insert into coupon(productid, description, amount) values(@ProductId, @Description, @Amount)", new { ProductId = coupon.ProductId, Description = coupon.Description, Amount = coupon.Amount });
 
             return createResult > 0;
         }
@@ -34,7 +34,7 @@ namespace Discount.Grpc.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             var coupon = await connection.QueryFirstOrDefaultAsync<Coupon>
                 ("select * from coupon where productid=@productId", new { productId = productId });
-            return coupon;
+            return coupon ?? new Coupon { Amount = 0 };
         }
 
         public async Task<bool> UpdateDiscount(Coupon coupon)
