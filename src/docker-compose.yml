@@ -13,6 +13,9 @@ services:
   discountdb:
     image: postgres
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
   pgadmin:
     image: dpage/pgadmin4
 
@@ -49,11 +52,18 @@ services:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
 
+  ocelotapigateway:
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGateWay/Dockerfile
+
 volumes:
   mongo_data:
   portainer_data:
   postgres_data:
   pgadmin_data:
+
 
 
 

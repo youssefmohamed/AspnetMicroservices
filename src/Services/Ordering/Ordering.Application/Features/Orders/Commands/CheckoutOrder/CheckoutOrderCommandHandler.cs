@@ -29,7 +29,7 @@ namespace Ordering.Application.Features.Orders.Commands.CheckoutOrder
             var orderEntity = _mapper.Map<Order>(request);
             await _orderRepository.AddAsync(orderEntity);
             _logger.LogInformation($"Order {orderEntity.Id} is placed successfully");
-            await SendEmailAsync(orderEntity.Id);
+            //await SendEmailAsync(orderEntity.Id);
             return orderEntity.Id;
 
         }

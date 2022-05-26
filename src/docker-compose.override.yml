@@ -36,6 +36,13 @@ services:
     ports:
       - 1433:1433
 
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+
   pgadmin:
     container_name: pgadmin
     restart: always
@@ -75,9 +82,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings:ConnectionString=basketdb:6379"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
+      - "RabbitMqSettings:Url=amqp://guest:guest@rabbitmq:5672"
     depends_on:
       - basketdb
       - discount.grpc
+      - rabbitmq
     ports:
       - "8001:80"
 
@@ -108,8 +117,21 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=admin1234;"
+      - "RabbitMqSettings:Url=amqp://guest:guest@rabbitmq:5672"
     depends_on: 
       - orderdb
+      - rabbitmq
     ports:
       - "8004:80"
+
+  ocelotapigateway:
+    container_name: ocelotapigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - catalog.api
+      - basket.api
+      - ordering.api
+    ports:
+      - "8010:80"
 
